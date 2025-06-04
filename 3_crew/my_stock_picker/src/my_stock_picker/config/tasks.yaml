@@ -1,0 +1,43 @@
+
+# --- Stock Picker Crew Tasks ---
+
+initial_stock_screening:
+  description: >
+    Scan the market for up to 7 stocks based on user criteria: Sector: {target_sector}, Max P/E: {max_pe_ratio}, Min Market Cap: {min_market_cap}, news keywords: {preferred_news_keywords}. Output as ScreenedStocks.
+  expected_output: >
+    An instance of ScreenedStocks (Pydantic model) listing the shortlisted stock candidates.
+  agent: market_screener
+
+fundamental_deep_dive:
+  description: >
+    For each stock candidate provided (from ScreenedStocks output), perform a fundamental analysis covering financial performance, valuation, business model, advantages, and risks. Output as StockFundamentalsList.
+  expected_output: >
+    An instance of StockFundamentalsList (Pydantic model) with detailed fundamental analysis for each stock.
+  agent: fundamental_analyst
+  depends_on: initial_stock_screening
+
+news_sentiment_review:
+  description: >
+    For the stocks analyzed fundamentally, review recent news and market sentiment. Output as StockSentimentsList.
+  expected_output: >
+    An instance of StockSentimentsList (Pydantic model) with news and sentiment analysis for each stock.
+  agent: news_sentiment_analyst
+  depends_on: fundamental_deep_dive
+
+managed_stock_selection_reporting:
+  description: >
+    Oversee the entire stock selection process using the defined user inputs (Sector: {target_sector}, Max P/E: {max_pe_ratio}, Min Market Cap: {min_market_cap}, Keywords: {preferred_news_keywords}, Top N Picks: {top_n_picks}).
+      1. Initiate stock screening (Task 1).
+      2. Oversee fundamental analysis on screened candidates (Task 2).
+      3. Oversee news and sentiment analysis (Task 3).
+      4. Review and synthesize all structured findings (Pydantic objects) from these analyses.
+      5. Based on this comprehensive review, select the top {top_n_picks} stocks.
+      6. Generate a human-readable, well-formatted Markdown report from this model, ensuring the disclaimer is included. The output must be Markdown, not JSON.
+      7. After generating the Markdown report, use the PushNotificationTool to send a push notification to the user. The notification should include your decision and a one-sentence rationale.
+  expected_output: >
+    The chosen company and why it was chosen; the companies that were not selected and why they were not selected.
+  agent: stock_selection_strategist
+  depends_on:
+    - initial_stock_screening
+    - fundamental_deep_dive
+    - news_sentiment_review

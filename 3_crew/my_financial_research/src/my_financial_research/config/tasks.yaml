@@ -1,0 +1,42 @@
+data_collection:
+  description: >
+    Gather comprehensive financial information for {company}. Focus on:
+      1. Recent quarterly and annual financial statements (revenue, profit, cash flow, debt).
+      2. Significant news articles and press releases from the last 6-12 months.
+      3. Current stock price, market capitalization, and key trading metrics.
+      4. Analyst ratings and price targets (if publicly available via search).
+      5. Major competitors and overall industry trends.
+  expected_output: >
+    A structured compilation of raw data, links to sources, and key data points summarized for the Financial Analyst Agent. This should be a text block or a collection of findings.
+  agent: financial_data_gatherer
+
+in_depth_analysis:
+  description: >
+    Conduct a thorough financial analysis of {company} using the data provided by the Financial Data Gatherer Agent. Your analysis should cover:
+      1. Key Financial Ratios (e.g., P/E, Debt-to-Equity, ROE, Current Ratio).
+      2. SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats).
+      3. Competitive positioning within its industry.
+      4. Assessment of recent news and its potential impact.
+      5. Identification of key risk factors and growth drivers.
+  expected_output: >
+    A detailed analytical document outlining findings for each of the above points. This document will serve as the core input for the final report.
+  agent: financial_analyst
+  context:
+    - data_collection
+
+report_compilation:
+  description: >
+    Compile a comprehensive financial research report for {company} based on the gathered data and the detailed analysis. The report should include:
+      1. Executive Summary.
+      2. Company Overview.
+      3. Financial Performance Review (key metrics, trends).
+      4. Market and Competitive Analysis.
+      5. SWOT Analysis.
+      6. Risk Assessment.
+      7. Future Outlook and Potential Catalysts/Headwinds.
+      8. Conclusion/Recommendation (e.g., potential sentiment like bullish, neutral, bearish, without giving direct financial advice unless explicitly told to role-play as a licensed advisor).
+  expected_output: >
+    A well-formatted, professional financial research report in Markdown format.
+  agent: report_generation
+  context:
+    - in_depth_analysis
